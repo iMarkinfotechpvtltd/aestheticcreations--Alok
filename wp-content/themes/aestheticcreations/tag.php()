@@ -1,0 +1,106 @@
+<?php
+/**
+ * The template for displaying Tag pages
+ *
+ * Used to display archive-type pages for posts in a tag.
+ *
+ * @link http://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package WordPress
+ * @subpackage Twenty_Fourteen
+ * @since Twenty Fourteen 1.0
+ */
+
+get_header(); ?>
+<?php while ( have_posts() ) : the_post(); ?>
+ <section class="banner-nxtpage" style="background-image:url(<?php echo esc_url( get_template_directory_uri() ); ?>/images/about-banner.jpg)">
+        <div class="container">
+            <div class="banner-inner-cont">
+                <h3><?php the_archive_title(); ?></h3>
+            </div>
+        </div>
+    </section>
+    <!--internal news main section-->
+    <section class="internalnews-sv">
+        <div class="container">
+            <div class="internalnews-cvr">
+                <div class="row">
+				
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="internalnews-leftbx">
+						 <?php
+							  if ( has_post_thumbnail() ) {
+							  $thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'full');
+							  ?>
+                            <div class="internalnews-leftbx-img" style="background-image:url(<?php echo $thumb[0];?>)">
+							 <?php
+								  }
+								  else
+								  {
+								?>
+								<div class="internalnews-leftbx-img" style="background-image:url(http://placehold.it/949x415)">
+								<?php
+								  }
+								 ?>
+                                <div class="result-date">
+                                    <h3><?php the_time('j'); ?></h3>
+                                    <p><?php the_time('M'); ?></p>
+                                </div>
+                            </div>
+                            <span class="calendar-icon"><i class="fa fa-calendar" aria-hidden="true"></i> <?php the_time('j F Y');?></span>
+                            <?php the_content();?>
+                            <!--<span class="tag-icon"><i class="fa fa-tags" aria-hidden="true"></i> <a href="#">Lorem ipsum dolor</a></span>-->
+                        </div>
+                    </div>
+					
+					
+                   <div class="col-md-3 col-md-offset-1 col-sm-4 col-xs-12">
+					<div class="news-list-rightbox blog-list-rightbx">
+							<div class="blog-search blog-internal-srch">
+								<form role="search" method="get" id="searchform" class="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+									<div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Search" name="s" id="s" value="<?php echo get_search_query(); ?>"><button class="srch-btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    </div>
+                                </form>
+							</div>
+							<div class="blognews-ctgr">
+								<h3>categories</h3>
+								<ul>
+								<?php 
+								$categories=get_categories();
+								foreach($categories as $category)
+								{
+								?>
+									<li><a href="<?php echo get_category_link($category->cat_ID );?>"><?php echo $category->name;?></a></li>
+								<?php
+								}
+								?>
+								</ul>
+							</div>
+                           <h4>latest news</h4>
+                             <ul class="news-bottom">
+							 <?php 
+								 query_posts( array ( 'post_type' => 'news','showposts'=>'-1','order'=>'ASC') );                                     
+								 while ( have_posts() ) : the_post();  
+							 ?>
+                                <li><a href="<?php the_permalink();?>"><?php the_title();?></a>
+                                    <div class="news-date"><?php the_time('j F Y');?></div>
+                                </li>
+								<?php
+								endwhile;
+								wp_reset_query();
+								?>
+                            </ul>
+                    </div>
+				</div>
+                </div>
+            </div>
+        </div>
+    </section>
+	<?php 
+					endwhile;
+					wp_reset_query();
+					?>
+<?php
+get_footer();
+?>
